@@ -1,6 +1,7 @@
 #! /bin/sh
 
 if [ -n "$VIRTUAL_ENV" ]; then
+  pip install -r requirements.txt
   echo "Symlinking gi module to $VIRTUAL_ENV"
   ln -s "/usr/lib/python3/dist-packages/gi" "$VIRTUAL_ENV/lib/python3.5"
 else
