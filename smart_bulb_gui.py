@@ -13,8 +13,11 @@ class SmartLightWindow(Gtk.Window):
 
     def __init__(self, bridge_ip):
         Gtk.Window.__init__(
-            self, title="Smart Bulb Controller",
+            self,
+            title="Smart Bulb Controller",
+            icon_name="dialog-information",
         )
+
         self.resize(600, 100)
 
         self.header = Gtk.HeaderBar()
@@ -31,6 +34,11 @@ class SmartLightWindow(Gtk.Window):
         self.add(self.box)
 
         self.setup_phue(bridge_ip)
+
+        self.global_switch = Gtk.Switch(active=True)
+        self.global_switch.connect('notify', self.toggle_all_lights)
+
+        self.header.pack_end(self.global_switch)
 
     def setup_phue(self, bridge_ip):
         self.bridge = Bridge(bridge_ip)
@@ -65,6 +73,10 @@ class SmartLightWindow(Gtk.Window):
 
     def toggle_light_power(self, switch, gparam, light):
         light.on = switch.get_active()
+
+    def toggle_all_lights(self, switch, gparam):
+        for light in self.bridge.lights:
+            light.on = switch.get_active()
 
 
 if __name__ == '__main__':
