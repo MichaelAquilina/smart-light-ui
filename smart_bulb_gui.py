@@ -44,6 +44,9 @@ class SmartLightWindow(Gtk.Window):
         self.bridge = Bridge(bridge_ip)
         self.bridge.connect()
 
+        self.light_buttons = {}
+        self.light_scales = {}
+
         for light in self.bridge.lights:
             light_scale = Gtk.HScale(
                 digits=0,
@@ -68,6 +71,9 @@ class SmartLightWindow(Gtk.Window):
             self.box.add(Gtk.Label(label=light.name))
             self.box.add(light_box)
 
+            self.light_scales[light] = light_scale
+            self.light_buttons[light] = light_button
+
     def toggle_light_brightness(self, widget, light):
         light.brightness = int(widget.get_value())
 
@@ -75,8 +81,12 @@ class SmartLightWindow(Gtk.Window):
         light.on = switch.get_active()
 
     def toggle_all_lights(self, switch, gparam):
-        for light in self.bridge.lights:
-            light.on = switch.get_active()
+        if not switch.get_active():
+            for light in self.bridge.lights:
+                light.on = False
+        else:
+            for light, light_button in self.light_buttons.items():
+                light.on = light_button.get_active()
 
 
 if __name__ == '__main__':
