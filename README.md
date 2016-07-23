@@ -7,6 +7,8 @@ of smart bulb available with an API.
 
 The next smart bulb to be supported will probably be LifX.
 
+![Prototype Screenshot](http://i.imgur.com/JoueINu.png)
+
 Dependencies
 ------------
 Requires a Python 3 installation and PyGtk installed on your machine.
