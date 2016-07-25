@@ -21,7 +21,7 @@ class PhueBulb(object):
         return self.light.on
 
     def get_brightness(self):
-        return self.light.brightness / 255
+        return self.light.brightness / 255.0
 
     def set_brightness(self, value):
         self.light.brightness = int(value * 255)
