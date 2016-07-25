@@ -3,10 +3,12 @@ import os
 
 from phue import Bridge
 
+import phue_bulb
+
 import gi
 gi.require_version('Gtk', '3.0')  # noqa
 
-from gi.repository import Gtk
+from gi.repository import Gtk  # noqa
 
 
 class SmartLightWindow(Gtk.Window):
@@ -33,60 +35,59 @@ class SmartLightWindow(Gtk.Window):
         )
         self.add(self.box)
 
-        self.setup_phue(bridge_ip)
+        self.lights = []
+        self.lights.extend(phue_bulb.get_phue_bulbs(bridge_ip))
+        self.setup_ui()
 
         self.global_switch = Gtk.Switch(active=True)
         self.global_switch.connect('notify', self.toggle_all_lights)
 
         self.header.pack_end(self.global_switch)
 
-    def setup_phue(self, bridge_ip):
-        self.bridge = Bridge(bridge_ip)
-        self.bridge.connect()
-
+    def setup_ui(self):
         self.light_buttons = {}
         self.light_scales = {}
 
-        for light in self.bridge.lights:
+        for light in self.lights:
             light_scale = Gtk.HScale(
                 digits=0,
                 valign=Gtk.Align.START,
                 adjustment=Gtk.Adjustment(
                     lower=0,
                     upper=255,
-                    value=light.brightness,
+                    value=light.get_brightness(),
                     step_increment=1,
                     page_increment=1,
                 )
             )
             light_scale.connect('value-changed', self.toggle_light_brightness, light)
 
-            light_button = Gtk.Switch(active=light.on)
+            light_button = Gtk.Switch(active=light.get_power())
             light_button.connect('notify::active', self.toggle_light_power, light)
 
             light_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=5)
             light_box.pack_start(light_button, False, False, 0)
             light_box.pack_start(light_scale, True, True, 0)
 
-            self.box.add(Gtk.Label(label=light.name))
+            self.box.add(Gtk.Label(label=light.get_name()))
             self.box.add(light_box)
 
             self.light_scales[light] = light_scale
             self.light_buttons[light] = light_button
 
     def toggle_light_brightness(self, widget, light):
-        light.brightness = int(widget.get_value())
+        light.set_brightness(int(widget.get_value()))
 
     def toggle_light_power(self, switch, gparam, light):
-        light.on = switch.get_active()
+        light.set_power(switch.get_active())
 
     def toggle_all_lights(self, switch, gparam):
         if not switch.get_active():
-            for light in self.bridge.lights:
-                light.on = False
+            for light in self.lights:
+                light.set_power(False)
         else:
             for light, light_button in self.light_buttons.items():
-                light.on = light_button.get_active()
+                light.set_power(light_button.get_active())
 
 
 if __name__ == '__main__':
