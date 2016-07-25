@@ -4,6 +4,7 @@ import os
 from phue import Bridge
 
 import phue_bulb
+import lifx_bulb
 
 import gi
 gi.require_version('Gtk', '3.0')  # noqa
@@ -13,7 +14,7 @@ from gi.repository import Gtk  # noqa
 
 class SmartLightWindow(Gtk.Window):
 
-    def __init__(self, bridge_ip):
+    def __init__(self, bridge_ip, controller_mac):
         Gtk.Window.__init__(
             self,
             title="Smart Bulb Controller",
@@ -37,6 +38,7 @@ class SmartLightWindow(Gtk.Window):
 
         self.lights = []
         self.lights.extend(phue_bulb.get_phue_bulbs(bridge_ip))
+        self.lights.extend(lifx_bulb.get_lifx_bulbs(controller_mac))
         self.setup_ui()
 
         self.global_switch = Gtk.Switch(active=True)
@@ -91,7 +93,10 @@ class SmartLightWindow(Gtk.Window):
 
 
 if __name__ == '__main__':
-    win = SmartLightWindow(os.environ["SMART_BRIDGE_IP"])
+    win = SmartLightWindow(
+        bridge_ip=os.environ["SMART_BRIDGE_IP"],
+        controller_mac=os.environ["CONTROLLER_MAC"],
+    )
     win.connect('delete-event', Gtk.main_quit)
     win.show_all()
     Gtk.main()
