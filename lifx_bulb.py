@@ -26,7 +26,7 @@ class LifxBulb(object):
         return 1.0
 
     def set_brightness(self, value):
-        self.light.set_rgb(value, value, value, fadeTime=0)
+        self.light.set_rgb(value, value, value, fadeTime=0.06)
 
     def get_name(self):
         return 'Lifx Controller'
