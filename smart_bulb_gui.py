@@ -50,14 +50,14 @@ class SmartLightWindow(Gtk.Window):
 
         for light in self.lights:
             light_scale = Gtk.HScale(
-                digits=0,
+                digits=2,
                 valign=Gtk.Align.START,
                 adjustment=Gtk.Adjustment(
                     lower=0,
-                    upper=255,
+                    upper=1.0,
                     value=light.get_brightness(),
-                    step_increment=1,
-                    page_increment=1,
+                    step_increment=0.05,
+                    page_increment=0.05,
                 )
             )
             light_scale.connect('value-changed', self.toggle_light_brightness, light)
@@ -76,7 +76,7 @@ class SmartLightWindow(Gtk.Window):
             self.light_buttons[light] = light_button
 
     def toggle_light_brightness(self, widget, light):
-        light.set_brightness(int(widget.get_value()))
+        light.set_brightness(widget.get_value())
 
     def toggle_light_power(self, switch, gparam, light):
         light.set_power(switch.get_active())

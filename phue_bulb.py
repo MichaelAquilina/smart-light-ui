@@ -21,10 +21,10 @@ class PhueBulb(object):
         return self.light.on
 
     def get_brightness(self):
-        return self.light.brightness
+        return self.light.brightness / 255
 
     def set_brightness(self, value):
-        self.light.brightness = value
+        self.light.brightness = int(value * 255)
 
     def get_name(self):
         return self.light.name
