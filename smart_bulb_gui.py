@@ -4,6 +4,7 @@ import os
 from phue import Bridge
 
 import phue_bulb
+import lifx_bulb
 
 import gi
 gi.require_version('Gtk', '3.0')  # noqa
@@ -37,6 +38,7 @@ class SmartLightWindow(Gtk.Window):
 
         self.lights = []
         self.lights.extend(phue_bulb.get_phue_bulbs(bridge_ip))
+        self.lights.extend(lifx_bulb.get_lifx_bulbs())
         self.setup_ui()
 
         self.global_switch = Gtk.Switch(active=True)
