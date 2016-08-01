@@ -1,8 +1,6 @@
 #! /usr/bin/python3
 import os
 
-from phue import Bridge
-
 import phue_bulb
 
 import gi
