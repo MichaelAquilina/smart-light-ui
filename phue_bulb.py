@@ -5,12 +5,10 @@ from phue import Bridge
 def get_phue_bulbs(ip_address):
     bridge = Bridge(ip_address)
     bridge.connect()
-
     return [PhueBulb(light) for light in bridge.lights]
 
 
 class PhueBulb(object):
-
     def __init__(self, light):
         self.light = light
 
