@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import os
+import signal
 
 import phue_bulb
 
@@ -92,4 +93,6 @@ if __name__ == '__main__':
     win = SmartLightWindow(os.environ["SMART_BRIDGE_IP"])
     win.connect('delete-event', Gtk.main_quit)
     win.show_all()
+    # workaround so that application closes correctly with keyboard interrupts
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
     Gtk.main()
